@@ -2,6 +2,7 @@
 
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera } from '@react-three/drei'
+import { NavigationToolbar, NavigationControls } from './navigation-toolbar'
 import { useState } from 'react'
 import Image from 'next/image'
 
@@ -118,7 +119,9 @@ export function SimpleCanvas(): JSX.Element {
         <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
           <GizmoViewport />
         </GizmoHelper>
+        <NavigationControls />
       </Canvas>
+      <NavigationToolbar />
     </div>
   )
 }
