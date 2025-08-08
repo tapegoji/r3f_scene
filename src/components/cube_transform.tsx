@@ -71,7 +71,6 @@ export function ThreeScene() {
           <directionalLight position={[10, 10, 5]} intensity={1} />
           <group>
             <Model position={[0, 1, 0]} color={color} />
-            <Model position={[2, 1, 0]} color={color} />
             {showGrid && <Grid position={[0, -0.01, 0]} infiniteGrid cellColor="#333333" sectionColor="#444444" />}
           </group>          
         </Suspense>
