@@ -2,14 +2,14 @@
 
 import dynamic from 'next/dynamic';
 
-const ThreeScene = dynamic(() => import("@/components/cube").then(mod => ({ default: mod.ThreeScene })), {
+const SimpleCanvas = dynamic(() => import("@/components/canvas").then(mod => ({ default: mod.SimpleCanvas })), {
   ssr: false,
 });
 
 export default function Home() {
   return (
     <main className="h-screen w-screen overflow-hidden">
-      <ThreeScene />
+      <SimpleCanvas />
     </main>
   );
 }
