@@ -14,8 +14,8 @@ export function SimpleCanvas() {
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial color="orange" />
         </mesh>
-        
-        <OrbitControls />
+
+        <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} />
         <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
           <GizmoViewport />
         </GizmoHelper>
