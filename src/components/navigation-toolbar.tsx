@@ -39,32 +39,32 @@ export function NavigationToolbar() {
       default={{
         x: typeof window !== 'undefined' ? window.innerWidth - 60 : 800,
         y: 16,
-        width: 40,
-        height: 320,
+        width: 56,
+        height: 'auto',
       }}
       enableResizing={false}
       bounds="parent"
       dragHandleClassName="drag-handle"
       style={{ zIndex: 100 }}
     >
-      <Card className="w-full h-full shadow-lg p-1 drag-handle cursor-move">
-        <div className="flex flex-col space-y-1">
+      <Card className="w-full h-auto shadow-lg p-2 drag-handle cursor-move border-border/50">
+        <div className="flex flex-col space-y-2">
           {/* Theme Toggle Button - at the top */}
           <Button
             variant="ghost"
             size="icon"
-            className="w-8 h-8 p-1 hover:bg-accent"
+            className="w-12 h-12 p-2 hover:bg-accent rounded-lg"
             onClick={toggleTheme}
           >
             {theme === 'light' ? (
-              <Moon className="h-4 w-4" />
+              <Moon className="h-6 w-6" />
             ) : (
-              <Sun className="h-4 w-4" />
+              <Sun className="h-6 w-6" />
             )}
           </Button>
           
           {/* Separator */}
-          <div className="h-px bg-border mx-1" />
+          <div className="h-px bg-border/30 mx-2 rounded-full" />
           
           {/* Navigation Buttons */}
           {viewButtons.map((button) => (
@@ -72,15 +72,14 @@ export function NavigationToolbar() {
               key={button.id}
               variant="ghost"
               size="icon"
-              className="w-8 h-8 p-1 hover:bg-accent"
+              className="w-12 h-12 p-2 hover:bg-accent rounded-lg"
               onClick={() => handleViewChange(button.position)}
             >
               <Image
                 src={button.icon}
                 alt={button.id}
-                width={20}
-                height={20}
-                className={currentTheme === 'light' ? '' : 'invert'}
+                width={32}
+                height={32}
               />
             </Button>
           ))}
