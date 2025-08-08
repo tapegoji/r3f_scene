@@ -39,7 +39,7 @@ export function NavigationToolbar() {
       default={{
         x: typeof window !== 'undefined' ? window.innerWidth - 60 : 800,
         y: 16,
-        width: 56,
+        width: 46,
         height: 'auto',
       }}
       enableResizing={false}
@@ -48,12 +48,12 @@ export function NavigationToolbar() {
       style={{ zIndex: 100 }}
     >
       <Card className="w-full h-auto shadow-lg p-2 drag-handle cursor-move border-border/50">
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-0 items-center justify-center">
           {/* Theme Toggle Button - at the top */}
           <Button
             variant="ghost"
             size="icon"
-            className="w-12 h-12 p-2 hover:bg-accent rounded-lg"
+            className="w-12 h-12 hover:bg-accent rounded-lg"
             onClick={toggleTheme}
           >
             {theme === 'light' ? (
