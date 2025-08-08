@@ -1,0 +1,2 @@
+- always use MCP playwright to check the output
+- do not run the app. Its running in the abckground just test it
