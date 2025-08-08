@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-const ThreeScene = dynamic(() => import("@/components/cube_transform").then(mod => ({ default: mod.ThreeScene })), {
+const ThreeScene = dynamic(() => import("@/components/cube").then(mod => ({ default: mod.ThreeScene })), {
   ssr: false,
 });
 

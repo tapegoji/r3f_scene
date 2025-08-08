@@ -10,6 +10,7 @@ import { GizmoHelper,
       Grid,
       useCursor } from "@react-three/drei"
 import { useControls } from 'leva'
+import { ControlPanel } from './control-panel'
 
 function Model({ position, color }: { position: [number, number, number], color: string }) {
   const ref = useRef(null);
@@ -64,7 +65,7 @@ export function ThreeScene() {
   });
 
   return (
-    <div className="w-full h-full bg-secondary">
+    <div className="w-full h-full bg-secondary relative">
       <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 20], zoom: 100 }}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.8} />
@@ -79,6 +80,7 @@ export function ThreeScene() {
         </GizmoHelper>
         <OrbitControls enableDamping={false} enableZoom={true} enablePan={true} makeDefault />
       </Canvas>
+      <ControlPanel />
     </div>
   )
 }
