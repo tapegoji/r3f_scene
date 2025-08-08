@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber'
 import { GizmoHelper, GizmoViewport, Edges, Points} from "@react-three/drei"
 import { OrbitControls} from "@react-three/drei"
 import { PivotControls } from "@react-three/drei"
+import { useCursor } from "@react-three/drei"
 import { useControls } from 'leva'
 import { useThree } from '@react-three/fiber'
 
@@ -17,6 +18,7 @@ function Box() {
   const { color } = useControls({
     color: "orange",
   });
+  useCursor(isHovered)
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
