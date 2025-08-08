@@ -1,48 +1,28 @@
 'use client'
-import { Suspense, useRef, useState, useEffect } from "react"
+import { Suspense, useRef, useState } from "react"
 import { Canvas } from '@react-three/fiber'
-import { GizmoHelper, GizmoViewport, Edges, Points} from "@react-three/drei"
-import { OrbitControls} from "@react-three/drei"
-import { PivotControls } from "@react-three/drei"
-import { useCursor } from "@react-three/drei"
+import { GizmoHelper,
+      GizmoViewport,
+      Edges, 
+      Points,
+      OrbitControls,
+      PivotControls ,
+      Grid,
+      useCursor } from "@react-three/drei"
 import { useControls } from 'leva'
-import { useThree } from '@react-three/fiber'
 
-function Box() {
+function Model({ position, color }: { position: [number, number, number], color: string }) {
   const ref = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
-  const [isTransformable, setIsTransformable] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const { gl } = useThree();
-  const { color } = useControls({
-    color: "orange",
-  });
   useCursor(isHovered)
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'M' || event.key === 'm') {
-        setIsTransformable(true);
-      } else if (event.key === 'Escape') {
-        setIsTransformable(false);
-        setIsSelected(false);
-      }
-    };
-
-    const canvas = gl.domElement;
-    canvas.addEventListener('keydown', handleKeyDown);
-    canvas.tabIndex = 1; // Make canvas focusable
-    canvas.focus();
-    
-    return () => canvas.removeEventListener('keydown', handleKeyDown);
-  }, [gl]);
   
    return (
     <>
       {/* Main mesh with material */}
       <PivotControls 
-        enabled={isTransformable && isSelected} 
+        enabled={isSelected} 
         rotation={[0, 0, 0]} 
         anchor={[1, 1, -1]} 
         scale={100} 
@@ -51,17 +31,16 @@ function Box() {
         lineWidth={5}
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}>
-        <mesh ref={ref}
+        <mesh ref={ref} position={position}
           onPointerEnter={(event) => (event.stopPropagation(), setIsHovered(true))}
           onPointerLeave={() => setIsHovered(false)}
-          onClick={(e) => {
+          onClick={() => {
             if (!isDragging) {
               setIsSelected(!isSelected);
             }
-          }}
-          
+          }}          
         >
-          <boxGeometry args={[2, 2, 2]} />
+          <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial  color={isSelected ? "lightblue" : color}
           transparent opacity={isHovered && !isSelected ? 0.8 : 1} />
           <Edges
@@ -77,7 +56,13 @@ function Box() {
   )
 }
 
+
 export function ThreeScene() {
+  const { color, showGrid } = useControls({
+    color: "orange",
+    showGrid: false,
+  });
+
   return (
     <div className="w-full h-full bg-secondary">
       <Canvas orthographic dpr={[1, 2]} camera={{ position: [0, 0, 20], zoom: 100 }}>
@@ -85,7 +70,9 @@ export function ThreeScene() {
           <ambientLight intensity={0.8} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
           <group>
-            <Box/>
+            <Model position={[0, 1, 0]} color={color} />
+            <Model position={[2, 1, 0]} color={color} />
+            {showGrid && <Grid position={[0, -0.01, 0]} infiniteGrid cellColor="#333333" sectionColor="#444444" />}
           </group>          
         </Suspense>
         <GizmoHelper alignment="bottom-right" margin={[80, 80]} renderPriority={1}>
