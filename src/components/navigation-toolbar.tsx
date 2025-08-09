@@ -137,8 +137,16 @@ export const NavigationToolbar: React.FC<ControlsInterfaceProps> = ({ setCameraP
         dragHandleClassName="drag-handle"
         style={{ zIndex: 100 }}
       >
-        <div className="w-full h-auto shadow-lg p-1 drag-handle cursor-move border border-border/50 rounded-lg bg-card">
-          <div className="flex flex-col space-y-1 items-center justify-center">
+        <div className="w-full h-auto shadow-lg border border-border/50 rounded-lg bg-card">
+          {/* Dedicated drag handle */}
+          <div className="drag-handle cursor-move w-full h-3 flex items-center justify-center rounded-t-lg bg-muted/30 hover:bg-muted/50 transition-colors border-b border-border/30">
+            <div className="flex space-x-0.5">
+              <div className="w-1 h-1 rounded-full bg-muted-foreground/40"></div>
+              <div className="w-1 h-1 rounded-full bg-muted-foreground/40"></div>
+              <div className="w-1 h-1 rounded-full bg-muted-foreground/40"></div>
+            </div>
+          </div>
+          <div className="flex flex-col space-y-1 items-center justify-center p-1">
             {/* Theme Toggle Button - at the top, spans both columns */}
             <div className="w-full flex justify-center">
               <button
