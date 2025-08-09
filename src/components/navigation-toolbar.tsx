@@ -125,55 +125,55 @@ export const NavigationToolbar: React.FC<ControlsInterfaceProps> = ({ setCameraP
   ])
 
   return (
-    <Rnd
-      default={{
-        x: typeof window !== 'undefined' ? window.innerWidth - 80 : 800,
-        y: 16,
-        width: 66,
-        height: 'auto',
-      }}
-      enableResizing={false}
-      bounds="parent"
-      dragHandleClassName="drag-handle"
-      style={{ zIndex: 100 }}
-    >
-      <div className="w-full h-auto shadow-lg p-1 drag-handle cursor-move border border-border/50 rounded-lg bg-card">
-        <div className="flex flex-col space-y-1 items-center justify-center">
-          {/* Theme Toggle Button - at the top, spans both columns */}
-          <div className="w-full flex justify-center">
-            <button
-              className="w-6 h-6 hover:bg-accent rounded-lg flex items-center justify-center transition-colors"
-              onClick={toggleTheme}
-              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-            >
-              {theme === 'light' ? (
-                <Moon className="h-6 w-6" />
-              ) : (
-                <Sun className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-          
-          {/* Navigation Buttons in 2-column grid */}
-          <div className="grid grid-cols-2 gap-1">
-            {viewButtons.map((button) => (
+      <Rnd
+        default={{
+          x: typeof window !== 'undefined' ? window.innerWidth - 80 : 800,
+          y: 16,
+          width: 66,
+          height: 'auto',
+        }}
+        enableResizing={false}
+        bounds="parent"
+        dragHandleClassName="drag-handle"
+        style={{ zIndex: 100 }}
+      >
+        <div className="w-full h-auto shadow-lg p-1 drag-handle cursor-move border border-border/50 rounded-lg bg-card">
+          <div className="flex flex-col space-y-1 items-center justify-center">
+            {/* Theme Toggle Button - at the top, spans both columns */}
+            <div className="w-full flex justify-center">
               <button
-                key={button.id}
-                className="w-7 h-7 p-0 hover:bg-accent rounded-lg flex items-center justify-center transition-colors"
-                onClick={() => handleAction(button.action)}
-                title={button.tooltip}
+                className="w-6 h-6 hover:bg-accent rounded-lg flex items-center justify-center transition-colors"
+                onClick={toggleTheme}
+                title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
               >
-                <Image
-                  src={button.icon}
-                  alt={button.id}
-                  width={22}
-                  height={22}
-                />
+                {theme === 'light' ? (
+                  <Moon className="h-6 w-6" />
+                ) : (
+                  <Sun className="h-6 w-6" />
+                )}
               </button>
-            ))}
+            </div>
+            
+            {/* Navigation Buttons in 2-column grid */}
+            <div className="grid grid-cols-2 gap-1">
+              {viewButtons.map((button) => (
+                <button
+                  key={button.id}
+                  className="w-7 h-7 p-0 hover:bg-accent rounded-lg flex items-center justify-center transition-colors"
+                  onClick={() => handleAction(button.action)}
+                  title={button.tooltip}
+                >
+                  <Image
+                    src={button.icon}
+                    alt={button.id}
+                    width={22}
+                    height={22}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </Rnd>
+      </Rnd>
   )
 }

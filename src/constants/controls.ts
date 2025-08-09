@@ -6,8 +6,7 @@ const controls = {
     BOTTOM: "bottom",
     TOP: "top",
     ORTHO: "ortho",
-    MOVE: "move",
-    ROTATE: "rotate",
+    TRANSFORM: "transform",
 };
 
 export default controls;
