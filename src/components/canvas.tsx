@@ -1,9 +1,28 @@
 'use client'
 
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, GizmoHelper, GizmoViewport, Grid } from '@react-three/drei'
 import { NavigationToolbar, NavigationControls } from './navigation-toolbar'
 import { useState, useEffect } from 'react'
+
+function SafeGizmo() {
+  const { camera, controls } = useThree()
+  const [isReady, setIsReady] = useState(false)
+  
+  useFrame(() => {
+    if (controls && !isReady) {
+      setIsReady(true)
+    }
+  })
+
+  if (!isReady || !controls) return null
+
+  return (
+    <GizmoHelper alignment="bottom-right" margin={[80, 80]} renderPriority={1}>
+      <GizmoViewport axisColors={["red", "green", "blue"]} labelColor="black" />
+    </GizmoHelper>
+  )
+}
 
 function SceneContent() {
   const [showGrid, setShowGrid] = useState(false)
@@ -45,10 +64,8 @@ function SceneContent() {
         />
       )}
 
-      <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} />
-      <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-        <GizmoViewport />
-      </GizmoHelper>
+      <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
+      <SafeGizmo />
       <NavigationControls />
     </>
   )
@@ -56,7 +73,7 @@ function SceneContent() {
 
 export function SimpleCanvas() {
   return (
-    <div className="w-full h-full bg-{theme === 'light' ? 'white' : 'black'} relative">
+    <div className="w-full h-full relative">
       <Canvas camera={{ position: [3, 3, 3] }}>
         <SceneContent />
       </Canvas>

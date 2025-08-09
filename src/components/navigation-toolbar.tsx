@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useThree } from '@react-three/fiber'
-import { Box3, Vector3, PerspectiveCamera, OrthographicCamera } from 'three'
+import { Box3, Vector3, PerspectiveCamera, OrthographicCamera, Mesh } from 'three'
 import { useTheme } from 'next-themes'
 import { Rnd } from 'react-rnd'
 import Image from 'next/image'
@@ -119,7 +119,8 @@ export function NavigationControls() {
     const center = box.getCenter(new Vector3())
 
     const maxDim = Math.max(size.x, size.y, size.z)
-    const fov = camera.fov * (Math.PI / 180)
+    // Check if camera is a PerspectiveCamera (has fov property)
+    const fov = 'fov' in camera ? camera.fov * (Math.PI / 180) : Math.PI / 4
     let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2))
 
     cameraZ *= 2.5 // Add some padding
@@ -179,7 +180,7 @@ export function NavigationControls() {
     scene.traverse((child) => {
       // Skip helper objects like grids, axes helpers, etc.
       // Only apply to user-created mesh objects
-      if (child.isMesh && 
+      if (child instanceof Mesh && 
           child.type !== 'GridHelper' && 
           !child.userData.isGrid && 
           !child.userData.isHelper &&
