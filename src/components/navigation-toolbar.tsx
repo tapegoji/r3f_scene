@@ -10,13 +10,13 @@ import Image from 'next/image'
 import { Sun, Moon } from 'lucide-react'
 
 const getViewButtons = (theme: string) => [
+  { id: 'orthographic', icon: `/icons/${theme}/iso.svg`, position: [3, 3, 3] as [number, number, number] },
   { id: 'front', icon: `/icons/${theme}/front.svg`, position: [0, 0, 5] as [number, number, number] },
   { id: 'rear', icon: `/icons/${theme}/rear.svg`, position: [0, 0, -5] as [number, number, number] },
   { id: 'left', icon: `/icons/${theme}/left.svg`, position: [-5, 0, 0] as [number, number, number] },
   { id: 'right', icon: `/icons/${theme}/right.svg`, position: [5, 0, 0] as [number, number, number] },
   { id: 'top', icon: `/icons/${theme}/top.svg`, position: [0, 5, 0] as [number, number, number] },
   { id: 'bottom', icon: `/icons/${theme}/bottom.svg`, position: [0, -5, 0] as [number, number, number] },
-  { id: 'perspective', icon: `/icons/${theme}/perspective.svg`, position: [3, 3, 3] as [number, number, number] },
 ]
 
 // External toolbar component that renders outside Canvas
@@ -47,13 +47,13 @@ export function NavigationToolbar() {
       dragHandleClassName="drag-handle"
       style={{ zIndex: 100 }}
     >
-      <Card className="w-full h-auto shadow-lg p-2 drag-handle cursor-move border-border/50">
+      <Card className="w-full h-auto shadow-lg p-1 drag-handle cursor-move border-border/50">
         <div className="flex flex-col space-y-0 items-center justify-center">
           {/* Theme Toggle Button - at the top */}
           <Button
             variant="ghost"
             size="icon"
-            className="w-12 h-12 hover:bg-accent rounded-lg"
+            className="w-6 h-6 hover:bg-accent rounded-lg"
             onClick={toggleTheme}
           >
             {theme === 'light' ? (
@@ -63,16 +63,13 @@ export function NavigationToolbar() {
             )}
           </Button>
           
-          {/* Separator */}
-          <div className="h-px bg-border/30 mx-2 rounded-full" />
-          
           {/* Navigation Buttons */}
           {viewButtons.map((button) => (
             <Button
               key={button.id}
               variant="ghost"
               size="icon"
-              className="w-12 h-12 p-2 hover:bg-accent rounded-lg"
+              className="w-10 h-10 p-0 hover:bg-accent rounded-lg"
               onClick={() => handleViewChange(button.position)}
             >
               <Image
