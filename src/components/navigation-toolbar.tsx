@@ -1,38 +1,111 @@
 'use client'
 
 import { useCallback, useEffect } from 'react'
-import { useThree } from '@react-three/fiber'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Rnd } from 'react-rnd'
 import Image from 'next/image'
 import { Sun, Moon } from 'lucide-react'
+import { useKeyboardControls } from '@react-three/drei'
+import controls from '@/constants/controls'
+
+interface ControlsInterfaceProps {
+  setCameraPosition: (pos: [number, number, number]) => void
+  setUseOrtho: (use: boolean) => void
+  isMove: boolean
+  isRotate: boolean
+  isChangePivot: boolean
+  setIsMove: React.Dispatch<React.SetStateAction<boolean>>
+  setIsRotate: React.Dispatch<React.SetStateAction<boolean>>
+  setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 const getViewButtons = (theme: string) => [
-  { id: 'front', icon: `/icons/${theme}/front.svg`, position: [0, 0, 5] as [number, number, number] },
-  { id: 'rear', icon: `/icons/${theme}/rear.svg`, position: [0, 0, -5] as [number, number, number] },
-  { id: 'left', icon: `/icons/${theme}/left.svg`, position: [-5, 0, 0] as [number, number, number] },
-  { id: 'right', icon: `/icons/${theme}/right.svg`, position: [5, 0, 0] as [number, number, number] },
-  { id: 'top', icon: `/icons/${theme}/top.svg`, position: [0, 5, 0] as [number, number, number] },
-  { id: 'bottom', icon: `/icons/${theme}/bottom.svg`, position: [0, -5, 0] as [number, number, number] },
-  { id: 'perspective', icon: `/icons/${theme}/perspective.svg`, position: [3, 3, 3] as [number, number, number] },
+  { id: 'front', icon: `/icons/${theme}/front.svg`, position: [0, 0, 5] as [number, number, number], useOrtho: false },
+  { id: 'rear', icon: `/icons/${theme}/rear.svg`, position: [0, 0, -5] as [number, number, number], useOrtho: false },
+  { id: 'left', icon: `/icons/${theme}/left.svg`, position: [-5, 0, 0] as [number, number, number], useOrtho: false },
+  { id: 'right', icon: `/icons/${theme}/right.svg`, position: [5, 0, 0] as [number, number, number], useOrtho: false },
+  { id: 'top', icon: `/icons/${theme}/top.svg`, position: [0, 5, 0] as [number, number, number], useOrtho: false },
+  { id: 'bottom', icon: `/icons/${theme}/bottom.svg`, position: [0, -5, 0] as [number, number, number], useOrtho: false },
+  { id: 'perspective', icon: `/icons/${theme}/perspective.svg`, position: [3, 3, 3] as [number, number, number], useOrtho: true },
 ]
 
+const getTransformButtons = (theme: string) => [
+  { id: 'move', icon: `/icons/${theme}/axes.svg` },
+  { id: 'rotate', icon: `/icons/${theme}/angle.svg` },
+  { id: 'changePivot', icon: `/icons/${theme}/axes0.svg` },
+]
+
+
 // External toolbar component that renders outside Canvas
-export function NavigationToolbar() {
+export const NavigationToolbar: React.FC<ControlsInterfaceProps> = ({ setCameraPosition, setUseOrtho, isMove, isRotate, isChangePivot, setIsMove, setIsRotate, setIsChangePivot }) =>  {
   const { theme, setTheme } = useTheme()
   const currentTheme = theme === 'light' ? 'light' : 'dark'
   const viewButtons = getViewButtons(currentTheme)
-
-  const handleViewChange = useCallback((position: [number, number, number]) => {
-    // Dispatch custom event to communicate with Canvas
-    window.dispatchEvent(new CustomEvent('camera-view-change', { detail: { position } }))
-  }, [])
+  const transformButtons = getTransformButtons(currentTheme)
 
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }, [theme, setTheme])
+
+  // Keyboard controls 
+  const frontShortcutKey = useKeyboardControls((state) => state[controls.FRONT])
+  const backShortcutKey = useKeyboardControls((state) => state[controls.BACK])
+  const leftShortcutKey = useKeyboardControls((state) => state[controls.LEFT])
+  const rightShortcutKey = useKeyboardControls((state) => state[controls.RIGHT])
+  const topShortcutKey = useKeyboardControls((state) => state[controls.TOP])
+  const bottomShortcutKey = useKeyboardControls((state) => state[controls.BOTTOM])
+  const orthoShortcutKey = useKeyboardControls((state) => state[controls.ORTHO])
+  const moveShortcutKey = useKeyboardControls((state) => state[controls.MOVE])
+  const rotateShortcutKey = useKeyboardControls((state) => state[controls.ROTATE])
+
+  useEffect(() => {
+    if (frontShortcutKey) {
+      setCameraPosition([0, 0, 5])
+      setUseOrtho(false)
+    } else if (backShortcutKey) {
+      setCameraPosition([0, 0, -5])
+      setUseOrtho(false)
+    } else if (leftShortcutKey) {
+      setCameraPosition([-5, 0, 0])
+      setUseOrtho(false)
+    } else if (rightShortcutKey) {
+      setCameraPosition([5, 0, 0])
+      setUseOrtho(false)
+    } else if (topShortcutKey) {
+      setCameraPosition([0, 5, 0])
+      setUseOrtho(false)
+    } else if (bottomShortcutKey) {
+      setCameraPosition([0, -5, 0])
+      setUseOrtho(false)
+    } else if (orthoShortcutKey) {
+      setCameraPosition([3, 3, 3])
+      setUseOrtho(true)
+    }
+
+    if (moveShortcutKey) {
+      setIsMove((prev) => !prev)
+    }
+
+    if (rotateShortcutKey) {
+      setIsRotate((prev) => !prev)
+    }
+  }, [
+    frontShortcutKey,
+    backShortcutKey,
+    leftShortcutKey,
+    rightShortcutKey,
+    topShortcutKey,
+    bottomShortcutKey,
+    orthoShortcutKey,
+    moveShortcutKey,
+    rotateShortcutKey,
+    setCameraPosition,
+    setUseOrtho,
+    setIsMove,
+    setIsRotate,
+  ])
 
   return (
     <Rnd
@@ -73,7 +146,10 @@ export function NavigationToolbar() {
               variant="ghost"
               size="icon"
               className="w-12 h-12 p-2 hover:bg-accent rounded-lg"
-              onClick={() => handleViewChange(button.position)}
+              onClick={() => {
+                setUseOrtho(button.useOrtho)
+                setCameraPosition(button.position)
+              }}
             >
               <Image
                 src={button.icon}
@@ -83,28 +159,43 @@ export function NavigationToolbar() {
               />
             </Button>
           ))}
+
+          {transformButtons.map((button) => {
+            const isActive =
+              (button.id === 'move' && isMove) ||
+              (button.id === 'rotate' && isRotate) ||
+              (button.id === 'changePivot' && isChangePivot);
+
+            return (
+              <Button
+                key={button.id}
+                variant="ghost"
+                size="icon"
+                className={`w-12 h-12 p-2 hover:bg-white rounded-lg ${
+                  isActive ? 'bg-white' : ''
+                }`}
+                onClick={() => {  
+                  if (button.id === 'move') {
+                    setIsMove((prev) => !prev);
+                  } else if (button.id === 'rotate') {
+                    setIsRotate((prev) => !prev);
+                  } else {
+                    setIsChangePivot((prev) => !prev);
+                  }
+                }}
+              >
+                <Image
+                  src={button.icon}
+                  alt={button.id}
+                  width={32}
+                  height={32}
+                />
+              </Button>
+            );
+          })}
+
         </div>
       </Card>
     </Rnd>
   )
-}
-
-// Component to be used inside Canvas
-export function NavigationControls() {
-  const { camera } = useThree()
-
-  // Listen for camera view changes from the external toolbar
-  useEffect(() => {
-    const handleCameraChange = (event: CustomEvent) => {
-      const { position } = event.detail
-      camera.position.set(position[0], position[1], position[2])
-      camera.lookAt(0, 0, 0)
-      camera.updateProjectionMatrix()
-    }
-
-    window.addEventListener('camera-view-change', handleCameraChange as EventListener)
-    return () => window.removeEventListener('camera-view-change', handleCameraChange as EventListener)
-  }, [camera])
-
-  return null
 }

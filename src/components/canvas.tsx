@@ -1,127 +1,44 @@
 'use client'
 
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera } from '@react-three/drei'
-import { NavigationToolbar, NavigationControls } from './navigation-toolbar'
-import { useState } from 'react'
-import Image from 'next/image'
+import { KeyboardControls } from '@react-three/drei'
+import { NavigationToolbar } from './navigation-toolbar'
+import { useMemo, useState } from 'react'
+import controls from '@/constants/controls'
 
-interface ControlsInterfaceProps {
-  setCameraPosition: (pos: [number, number, number]) => void
-  setUseOrtho: (use: boolean) => void
-}
-
-interface CameraButtonConfig {
-  icon: string
-  alt: string
-  position: [number, number, number]
-  useOrtho: boolean
-}
-
-const cameraButtons: CameraButtonConfig[] = [
-  {
-    icon: '/icons/light/right.svg',
-    alt: '+X (Right)',
-    position: [5, 0, 0],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/left.svg',
-    alt: '-X (Left)',
-    position: [-5, 0, 0],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/top.svg',
-    alt: '+Y (Top)',
-    position: [0, 5, 0],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/bottom.svg',
-    alt: '-Y (Bottom)',
-    position: [0, -5, 0],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/front.svg',
-    alt: '+Z (Front)',
-    position: [0, 0, 5],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/rear.svg',
-    alt: '-Z (Back)',
-    position: [0, 0, -5],
-    useOrtho: false,
-  },
-  {
-    icon: '/icons/light/angle.svg',
-    alt: 'Isometric View',
-    position: [5, 5, 5],
-    useOrtho: true,
-  },
-]
-
-const ControlsInterface: React.FC<ControlsInterfaceProps> = ({ setCameraPosition, setUseOrtho }) => {
-  return (
-    <div className='absolute w-4/5 top-5 left-5 bg-blue-200 text-black p-4 rounded shadow flex flex-wrap gap-4 z-10'>
-      {cameraButtons.map((btn, index) => (
-        <button
-          key={index}
-          onClick={() => {
-            setUseOrtho(btn.useOrtho)
-            setCameraPosition(btn.position)
-          }}
-        >
-          <Image src={btn.icon} alt={btn.alt} width={50} height={50} />
-        </button>
-      ))}
-    </div>
-  )
-}
+import Experience from './Experience'
 
 export function SimpleCanvas(): JSX.Element {
   const [useOrtho, setUseOrtho] = useState<boolean>(false)
   const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
+  const [isMove, setIsMove] = useState<boolean>(false)
+  const [isRotate, setIsRotate] = useState<boolean>(false)
+  const [isChangePivot, setIsChangePivot] = useState<boolean>(false)
+
+  // Keyboard controls for shortcut key
+  const map = useMemo(
+    () => [
+      { name: controls.FRONT, keys: ["1"] },
+      { name: controls.BACK, keys: ["6"] },
+      { name: controls.LEFT, keys: ["4"] },
+      { name: controls.RIGHT, keys: ["3"] },
+      { name: controls.BOTTOM, keys: ["5"] },
+      { name: controls.TOP, keys: ["2"] },
+      { name: controls.ORTHO, keys: ["o"] },
+      { name: controls.MOVE, keys: ["g"] }, 
+      { name: controls.ROTATE, keys: ["r"] },
+    ],
+    []
+  )
 
   return (
-    <div className="w-full h-full">
-      <ControlsInterface setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} />
-      <Canvas>
-        {useOrtho ? (
-          <OrthographicCamera
-            makeDefault
-            position={cameraPosition}
-            zoom={100}
-            near={0.1}
-            far={1000}
-          />
-        ) : (
-          <PerspectiveCamera
-            makeDefault
-            position={cameraPosition}
-            fov={50}
-            near={0.1}
-            far={1000}
-          />
-        )}
-
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-
-        <mesh>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="orange" />
-        </mesh>
-
-        <OrbitControls />
-        <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-          <GizmoViewport />
-        </GizmoHelper>
-        <NavigationControls />
-      </Canvas>
-      <NavigationToolbar />
-    </div>
+    <KeyboardControls map={map}>
+      <div className="w-full h-full">
+        <Canvas>
+          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isMove={isMove} isRotate={isRotate} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
+        </Canvas>
+        <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isMove={isMove} isRotate={isRotate} isChangePivot={isChangePivot} setIsMove={setIsMove} setIsRotate={setIsRotate} setIsChangePivot={setIsChangePivot} />
+      </div>
+    </KeyboardControls>
   )
 }
