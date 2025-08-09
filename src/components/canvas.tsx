@@ -6,7 +6,7 @@ import { NavigationToolbar, NavigationControls } from './navigation-toolbar'
 
 export function SimpleCanvas() {
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full bg-{theme === 'light' ? 'white' : 'black'} relative">
       <Canvas camera={{ position: [3, 3, 3] }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1} />

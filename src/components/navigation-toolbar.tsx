@@ -24,7 +24,6 @@ const getViewButtons = (theme: string) => [
   { id: 'axes0', icon: `/icons/${theme}/axes0.svg`, position: [0, 0, 0] as [number, number, number], tooltip: 'Toggle Origin Axes' },
   { id: 'perspective', icon: `/icons/${theme}/perspective.svg`, position: [0, 0, 0] as [number, number, number], tooltip: 'Toggle Perspective' },
   { id: 'extrude', icon: `/icons/${theme}/plane.svg`, position: [0, 0, 0] as [number, number, number], tooltip: 'Extrude Mode' },
-  { id: 'properties', icon: `/icons/${theme}/properties.svg`, position: [0, 0, 0] as [number, number, number], tooltip: 'Properties Panel' }
 ]
 
 // External toolbar component that renders outside Canvas
