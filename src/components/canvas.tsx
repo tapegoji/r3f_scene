@@ -1,83 +1,42 @@
 'use client'
 
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, GizmoHelper, GizmoViewport, Grid } from '@react-three/drei'
-import { NavigationToolbar, NavigationControls } from './navigation-toolbar'
-import { useState, useEffect } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { KeyboardControls } from '@react-three/drei'
+import { NavigationToolbar } from './navigation-toolbar'
+import { useMemo, useState } from 'react'
+import controls from '@/constants/controls'
 
-function SafeGizmo() {
-  const { camera, controls } = useThree()
-  const [isReady, setIsReady] = useState(false)
-  
-  useFrame(() => {
-    if (controls && !isReady) {
-      setIsReady(true)
-    }
-  })
+import Experience from './Experience'
 
-  if (!isReady || !controls) return null
+export function SimpleCanvas(): JSX.Element {
+  const [useOrtho, setUseOrtho] = useState<boolean>(false)
+  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
+  const [isTransform, setIsTransform] = useState<boolean>(false)
+  const [isChangePivot, setIsChangePivot] = useState<boolean>(false)
 
-  return (
-    <GizmoHelper alignment="bottom-right" margin={[80, 80]} renderPriority={1}>
-      <GizmoViewport axisColors={["red", "green", "blue"]} labelColor="black" />
-    </GizmoHelper>
+  // Keyboard controls for shortcut key
+  const map = useMemo(
+    () => [
+      { name: controls.FRONT, keys: ["1"] },
+      { name: controls.BACK, keys: ["6"] },
+      { name: controls.LEFT, keys: ["4"] },
+      { name: controls.RIGHT, keys: ["3"] },
+      { name: controls.BOTTOM, keys: ["5"] },
+      { name: controls.TOP, keys: ["2"] },
+      { name: controls.ORTHO, keys: ["o"] },
+      { name: controls.TRANSFORM, keys: ["g"] }, 
+    ],
+    []
   )
-}
-
-function SceneContent() {
-  const [showGrid, setShowGrid] = useState(false)
-
-  useEffect(() => {
-    const handleGridToggle = (event: CustomEvent) => {
-      if (event.detail.action.type === 'toggle' && event.detail.action.feature === 'grid') {
-        setShowGrid(prev => !prev)
-      }
-    }
-
-    window.addEventListener('navigation-action', handleGridToggle as EventListener)
-    return () => window.removeEventListener('navigation-action', handleGridToggle as EventListener)
-  }, [])
 
   return (
-    <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="orange" />
-      </mesh>
-
-      {showGrid && (
-        <Grid 
-          args={[10, 10]} 
-          cellSize={1} 
-          cellThickness={1} 
-          cellColor="#6f6f6f" 
-          sectionSize={5} 
-          sectionThickness={1.5} 
-          sectionColor="#9d4b4b" 
-          fadeDistance={25} 
-          fadeStrength={1} 
-          followCamera={false} 
-          infiniteGrid={true}
-        />
-      )}
-
-      <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
-      <SafeGizmo />
-      <NavigationControls />
-    </>
-  )
-}
-
-export function SimpleCanvas() {
-  return (
-    <div className="w-full h-full relative">
-      <Canvas camera={{ position: [3, 3, 3] }}>
-        <SceneContent />
-      </Canvas>
-      <NavigationToolbar />
-    </div>
+    <KeyboardControls map={map}>
+      <div className="w-full h-full">
+        <Canvas>
+          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
+        </Canvas>
+        <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} />
+      </div>
+    </KeyboardControls>
   )
 }
