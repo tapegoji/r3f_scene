@@ -298,7 +298,7 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
                 </mesh>
             </PivotControls>
 
-            <OrbitControls makeDefault />
+            <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
             <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
                 <GizmoViewport />
             </GizmoHelper>

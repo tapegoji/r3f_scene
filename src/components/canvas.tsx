@@ -23,8 +23,8 @@ export function SimpleCanvas(): JSX.Element {
       { name: controls.RIGHT, keys: ["3"] },
       { name: controls.BOTTOM, keys: ["5"] },
       { name: controls.TOP, keys: ["2"] },
-      { name: controls.ORTHO, keys: ["o"] },
-      { name: controls.TRANSFORM, keys: ["g"] }, 
+      { name: controls.ORTHO, keys: ["0"] },
+      { name: controls.TRANSFORM, keys: ["m"] }, 
     ],
     []
   )
