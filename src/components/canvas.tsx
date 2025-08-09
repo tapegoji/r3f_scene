@@ -11,8 +11,7 @@ import Experience from './Experience'
 export function SimpleCanvas(): JSX.Element {
   const [useOrtho, setUseOrtho] = useState<boolean>(false)
   const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
-  const [isMove, setIsMove] = useState<boolean>(false)
-  const [isRotate, setIsRotate] = useState<boolean>(false)
+  const [isTransform, setIsTransform] = useState<boolean>(false)
   const [isChangePivot, setIsChangePivot] = useState<boolean>(false)
 
   // Keyboard controls for shortcut key
@@ -25,8 +24,7 @@ export function SimpleCanvas(): JSX.Element {
       { name: controls.BOTTOM, keys: ["5"] },
       { name: controls.TOP, keys: ["2"] },
       { name: controls.ORTHO, keys: ["o"] },
-      { name: controls.MOVE, keys: ["g"] }, 
-      { name: controls.ROTATE, keys: ["r"] },
+      { name: controls.TRANSFORM, keys: ["g"] }, 
     ],
     []
   )
@@ -35,9 +33,9 @@ export function SimpleCanvas(): JSX.Element {
     <KeyboardControls map={map}>
       <div className="w-full h-full">
         <Canvas>
-          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isMove={isMove} isRotate={isRotate} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
+          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
         </Canvas>
-        <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isMove={isMove} isRotate={isRotate} isChangePivot={isChangePivot} setIsMove={setIsMove} setIsRotate={setIsRotate} setIsChangePivot={setIsChangePivot} />
+        <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} />
       </div>
     </KeyboardControls>
   )
