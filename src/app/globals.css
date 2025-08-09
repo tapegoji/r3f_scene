@@ -59,6 +59,20 @@ html, body, #__next {
   width: 100%;
 }
 
+/* Fallback for browsers that don't support dynamic viewport units */
+.h-dvh {
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Dynamic viewport height */
+}
+
+/* Additional mobile viewport fix for older browsers */
+@supports not (height: 100dvh) {
+  .h-dvh {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

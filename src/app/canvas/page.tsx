@@ -8,7 +8,7 @@ const SimpleCanvas = dynamic(() => import("@/components/canvas").then(mod => ({ 
 
 export default function CanvasPage() {
   return (
-    <main className="h-screen w-screen overflow-hidden">
+    <main className="h-dvh w-screen overflow-hidden">
       <SimpleCanvas />
     </main>
   );
