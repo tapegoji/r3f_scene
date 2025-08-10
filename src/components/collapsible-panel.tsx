@@ -200,6 +200,7 @@ export function CollapsiblePanel({
         bottomRight: { width: '12px', height: '12px', right: '-6px', bottom: '-6px' }
       }}
       maxWidth={typeof window !== 'undefined' ? window.innerWidth / 2 : undefined}
+      maxHeight={typeof window !== 'undefined' ? window.innerHeight - 100 : undefined}
       bounds={bounds}
       dragHandleClassName="drag-handle"
       onDragStop={handleDragStop}
