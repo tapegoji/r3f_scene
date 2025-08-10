@@ -4,7 +4,8 @@ import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
 import { NavigationToolbar } from './navigation-toolbar'
 import { ThemeToggle } from './theme-toggle'
-import { FloatingCard } from './control-panel'
+import { ControlPanel } from './control-panel'
+import { ViewPanel } from './view-panel'
 import { useMemo, useState } from 'react'
 import controls from '@/constants/controls'
 
@@ -37,10 +38,11 @@ export function SimpleCanvas(): JSX.Element {
         <Canvas>
           <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
         </Canvas>
+        <ViewPanel />
         <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} />
         {/* <ControlPanel /> */}
         <ThemeToggle />
-        <FloatingCard />
+        <ControlPanel />
       </div>
     </KeyboardControls>
   )

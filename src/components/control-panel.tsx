@@ -61,19 +61,19 @@ const ControlPanelSections = [
   },
 ]
 
-interface FloatingCardProps {
+interface ControlPanelProps {
   x?: number
   y?: number
   width?: number
   height?: number
 }
 
-export function FloatingCard({
+export function ControlPanel({
   x = 16,
   y = 16,
   width = 300,
   height = 600
-}: FloatingCardProps) {
+}: ControlPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
 
   if (!isVisible) {
