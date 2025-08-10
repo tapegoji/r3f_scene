@@ -166,6 +166,7 @@ export function CollapsiblePanel({
         size={collapsedSize}
         enableResizing={false}
         bounds={bounds}
+        disableDragging={isMobile}
         dragHandleClassName="drag-handle"
         onDragStop={handleDragStop}
         style={{ zIndex: 100 }}
@@ -202,6 +203,7 @@ export function CollapsiblePanel({
       maxWidth={typeof window !== 'undefined' ? window.innerWidth / 2 : undefined}
       maxHeight={typeof window !== 'undefined' ? window.innerHeight - 100 : undefined}
       bounds={bounds}
+      disableDragging={isMobile && !isExpanded}
       dragHandleClassName="drag-handle"
       onDragStop={handleDragStop}
       style={{ zIndex: 100 }}
