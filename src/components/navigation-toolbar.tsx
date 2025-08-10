@@ -129,7 +129,7 @@ export const NavigationToolbar: React.FC<ControlsInterfaceProps> = ({
   return (
     <CollapsiblePanel
       defaultPosition={{
-        x: typeof window !== 'undefined' ? window.innerWidth - 80 : 800,
+        x: -16, // 16px from right edge (matching control panel margin)
         y: 60
       }}
       expandedSize={{ width: 66, height: 'auto' }}

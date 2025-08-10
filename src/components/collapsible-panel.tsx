@@ -39,6 +39,15 @@ const calculateSafePosition = (
   preferredX: number,
   minMargin: number = 16
 ) => {
+  // Handle negative X values as right-edge offsets
+  if (preferredX < 0) {
+    // Negative X means "distance from right edge"
+    // e.g., -16 means "16px from right edge"
+    const rightEdgePosition = windowWidth + preferredX - panelWidth
+    return Math.max(rightEdgePosition, minMargin)
+  }
+  
+  // Positive X values work as before (left-edge positioning)
   const maxX = Math.max(windowWidth - panelWidth - minMargin, minMargin)
   return Math.min(preferredX, maxX)
 }
@@ -83,7 +92,7 @@ export function CollapsiblePanel({
           window.innerWidth, 
           typeof expandedSize.width === 'number' ? expandedSize.width : 66,
           defaultPosition.x
-        ) : defaultPosition.x,
+        ) : Math.abs(defaultPosition.x), // Use absolute value for SSR fallback
     y: defaultPosition.y
   }))
 
