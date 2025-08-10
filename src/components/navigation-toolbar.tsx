@@ -37,8 +37,6 @@ const getViewButtons = (theme: string = 'dark'):  Array<{ id: string, icon: stri
   { id: 'grid', icon: `/icons/${theme}/grid.svg`, action: { type: 'toggle', feature: 'grid' }, tooltip: 'Toggle Grid' },
   { id: 'axes', icon: `/icons/${theme}/axes.svg`, action: { type: 'toggle', feature: 'axes' }, tooltip: 'Toggle Axes' },
   { id: 'axes0', icon: `/icons/${theme}/axes0.svg`, action: { type: 'toggle', feature: 'axes0' }, tooltip: 'Toggle Origin Axes' },
-  { id: 'perspective', icon: `/icons/${theme}/perspective.svg`, action: { type: 'toggle', feature: 'perspective' }, tooltip: 'Toggle Perspective' },
-  { id: 'extrude', icon: `/icons/${theme}/plane.svg`, action: { type: 'toggle', feature: 'extrude' }, tooltip: 'Extrude Mode' },
 ]
 
 export const NavigationToolbar: React.FC<ControlsInterfaceProps> = ({ 

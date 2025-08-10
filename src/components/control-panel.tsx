@@ -1,32 +1,23 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { CornerDownLeft } from "lucide-react"
+import { useState } from 'react'
+import { Rnd } from 'react-rnd'
+
+import { PanelLeftClose,
+         ChevronRight,
+         Box,
+         Grid3X3,
+         Play,
+         BarChart3,
+         Menu } from 'lucide-react'
+
 import {
-  Box,
-  Grid3X3,
-  Play,
-  BarChart3,
-} from "lucide-react"
-import Link from 'next/link'
-import { CollapsiblePanel } from './collapsible-panel'
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 
-type Project = {
-  id: number
-  name: string
-  slug: string
-  description: string | null
-  status: string
-  relativePath: string
-  createdAt: Date
-  updatedAt: Date
-}
-
-type ControlPanelProps = {
-  project?: Project | null
-}
-
-const controlSections = [
+const ControlPanelSections = [
   {
     title: "Geometry",
     icon: Box,
@@ -70,64 +61,77 @@ const controlSections = [
   },
 ]
 
-export function ControlPanel({ project }: ControlPanelProps) {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    "Geometry": true, // Default open based on isActive
-    "Mesh": false,
-    "Simulation": false,
-    "Analysis": false,
-  })
+interface FloatingCardProps {
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+}
 
+export function FloatingCard({
+  x = 16,
+  y = 16,
+  width = 300,
+  height = 600
+}: FloatingCardProps) {
+  const [isVisible, setIsVisible] = useState(true)
+
+  if (!isVisible) {
+    return (
+      <button 
+        onClick={() => setIsVisible(true)}
+        className="fixed top-4 left-4 p-2 bg-card border rounded-lg shadow-lg hover:bg-muted/50 transition-colors z-50"
+      >
+        <Menu className="h-4 w-4 text-muted-foreground" />
+      </button>
+    )
+  }
   return (
-    <CollapsiblePanel
-      defaultPosition={{ x: 16, y: 16 }}
-      expandedSize={{ width: 320, height: 600 }}
-      enableResize={true}
+    <Rnd
+      default={{ x, y, width, height }}
+      enableResizing={{
+        bottomRight: true
+      }}
+      dragHandleClassName="drag-handle"
+      style={{ zIndex: 100 }}
     >
-      {/* Header with back button */}
-      <div className="flex-1 min-w-0 flex items-center gap-2">
-        {project && (
-          <Link href="/dashboard" className="p-1 hover:bg-accent rounded transition-colors">
-            <CornerDownLeft className="h-4 w-4" />
-          </Link>
-        )}
-      </div>
-      {/* Content */}
-      <div className="p-0 flex-1 overflow-hidden">
-        <div className="h-full overflow-auto">
-          <div className="px-4 pb-4">
-            <div className="space-y-1">
-              {controlSections.map((section) => (
-                <div key={section.title}>
-                  <button
-                    className="w-full px-2 py-2 hover:bg-accent rounded-md flex items-center justify-between transition-colors"
-                    onClick={() => setOpenSections(prev => ({...prev, [section.title]: !prev[section.title]}))}
-                  >
-                    <div className="flex items-center">
-                      <section.icon className="h-4 w-4 mr-2" />
-                      <span className="text-left font-medium">{section.title}</span>
-                    </div>
-                    <span className={`transform transition-transform ${openSections[section.title] ? 'rotate-180' : ''}`}>▼</span>
-                  </button>
-                  {openSections[section.title] && (
-                    <div className="pl-6 space-y-1 pb-2">
-                      {section.items.map((item) => (
-                        <a
-                          key={item.title}
-                          href={item.url}
-                          className="w-full justify-start px-2 py-1.5 h-auto text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors block"
-                        >
-                          {item.title}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
+      <div className="h-full w-full bg-card/50 border rounded-lg shadow-lg backdrop-blur-sm">
+        <div className="h-8 bg-muted/30 rounded-t-lg border-b px-3 flex items-center justify-between">
+          <span className="drag-handle cursor-move text-sm font-medium text-muted-foreground flex-1">Control Panel</span>
+          <button 
+            onClick={() => setIsVisible(false)}
+            className="p-1 hover:bg-muted/50 rounded transition-colors"
+          >
+            <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
+          </button>
+        </div>
+        <div className="p-4 h-[calc(100%-2rem)] overflow-auto">
+          {ControlPanelSections.map((section) => (
+            <Collapsible
+              key={section.title}
+              title={section.title}
+              defaultOpen
+              className="group/collapsible"
+            >
+            <CollapsibleTrigger className="flex items-center justify-between w-full">
+              {section.title}
+              <ChevronRight className="transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              {section.items.map((item) => (
+                <a
+                  key={item.title}
+                  href={item.url}
+                  className="w-full justify-start px-2 py-1.5 h-auto text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors block"
+                >
+                  {item.title}
+                </a>
               ))}
-            </div>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
+          ))}
         </div>
       </div>
-    </CollapsiblePanel>
+    </Rnd>
   )
 }
