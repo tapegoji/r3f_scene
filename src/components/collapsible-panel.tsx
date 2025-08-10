@@ -85,12 +85,18 @@ export function CollapsiblePanel({
   const isMobile = useIsMobile()
   const [isExpanded, setIsExpanded] = useState(true)
   
+  // Calculate effective panel width for initial positioning
+  // Use collapsed width if panel will auto-collapse on mobile
+  const effectiveWidth = (autoCollapseOnMobile && isMobile) 
+    ? collapsedSize.width 
+    : (typeof expandedSize.width === 'number' ? expandedSize.width : 66)
+  
   // Dynamic position state for responsive positioning
   const [position, setPosition] = useState(() => ({
     x: typeof window !== 'undefined' ? 
         calculateSafePosition(
           window.innerWidth, 
-          typeof expandedSize.width === 'number' ? expandedSize.width : 66,
+          effectiveWidth,
           defaultPosition.x
         ) : Math.abs(defaultPosition.x), // Use absolute value for SSR fallback
     y: defaultPosition.y
@@ -106,7 +112,10 @@ export function CollapsiblePanel({
   // Handle window resize for responsive positioning
   useEffect(() => {
     const handleResize = debounce(() => {
-      const panelWidth = typeof expandedSize.width === 'number' ? expandedSize.width : 66
+      // Use same effective width logic as initial positioning
+      const panelWidth = (autoCollapseOnMobile && isMobile) 
+        ? collapsedSize.width 
+        : (typeof expandedSize.width === 'number' ? expandedSize.width : 66)
       setPosition(prev => ({
         ...prev,
         x: calculateSafePosition(window.innerWidth, panelWidth, defaultPosition.x)
@@ -115,7 +124,7 @@ export function CollapsiblePanel({
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [defaultPosition.x, expandedSize.width])
+  }, [defaultPosition.x, expandedSize.width, autoCollapseOnMobile, isMobile, collapsedSize.width])
 
   // Handle drag end to update position state
   const handleDragStop = useCallback((e: any, data: { x: number; y: number }) => {
@@ -175,7 +184,22 @@ export function CollapsiblePanel({
     <Rnd
       position={position}
       size={expandedSize}
-      enableResizing={enableResize}
+      enableResizing={enableResize ? {
+        top: false,
+        right: true,
+        bottom: true,
+        left: false,
+        topRight: false,
+        bottomRight: true,
+        bottomLeft: false,
+        topLeft: false,
+      } : false}
+      resizeHandleStyles={{
+        right: { width: '8px', right: '-4px' },
+        bottom: { height: '8px', bottom: '-4px' },
+        bottomRight: { width: '12px', height: '12px', right: '-6px', bottom: '-6px' }
+      }}
+      maxWidth={typeof window !== 'undefined' ? window.innerWidth / 2 : undefined}
       bounds={bounds}
       dragHandleClassName="drag-handle"
       onDragStop={handleDragStop}
