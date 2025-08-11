@@ -118,9 +118,9 @@ export function ControlPanel({
           </div>
           <button 
             onClick={() => setIsVisible(false)}
-            className="p-1 hover:bg-muted/50 rounded transition-colors"
+            className="p-2 hover:bg-muted/50 rounded transition-colors"
           >
-            <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
+            <PanelLeftClose className="h-4 w-4 text-muted-foreground/60" />
           </button>
         </div>
         <div className="p-4 h-[calc(100%-2rem)] overflow-auto">

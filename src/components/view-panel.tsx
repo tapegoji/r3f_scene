@@ -19,8 +19,8 @@ interface ViewPanelProps {
 export function ViewPanel({
   x,
   y = 350,
-  width = 60,
-  height = 400
+  width = 70,
+  height = 300
 }: ViewPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
@@ -67,7 +67,7 @@ export function ViewPanel({
     <Rnd
       default={{ x: dynamicX, y, width, height }}
       enableResizing={{
-        bottomRight: true
+        bottomLeft: true
       }}
       dragHandleClassName="drag-handle"
       style={{ zIndex: 100 }}
@@ -84,10 +84,10 @@ export function ViewPanel({
             <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
           </div>
         </div>
-        <div className="p-0 h-[calc(100%-2rem)] overflow-auto grid grid-cols-2 gap-1">
+        <div className="p-0 h-[calc(100%-2rem)] overflow-auto grid gap-1" style={{ gridTemplateColumns: 'repeat(2, minmax(32px, 1fr))' }}>
           {viewItems.map((item) => (
-            <div key={item.id} className="flex items-center justify-center p-1 hover:bg-muted/30 rounded transition-colors cursor-pointer">
-              <img src={item.icon} alt={item.tooltip} className="h-6 w-6" />
+            <div key={item.id} className="flex items-center justify-center p-0.5 hover:bg-muted/30 rounded transition-colors cursor-pointer min-w-8 min-h-8">
+              <img src={item.icon} alt={item.tooltip} className="h-6 w-6 flex-shrink-0" />
             </div>
           ))}
         </div>
