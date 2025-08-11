@@ -112,7 +112,7 @@ export function ImportDialog({ onFileUploaded }: ImportDialogProps) {
           Import CAD
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] bg-primary border shadow-lg">
+      <DialogContent className="sm:max-w-[600px] bg-card border shadow-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
@@ -129,11 +129,11 @@ export function ImportDialog({ onFileUploaded }: ImportDialogProps) {
             className={`
               relative border-2 border-dashed rounded-lg p-8 text-center transition-colors
               ${dragActive 
-                ? 'border-primary bg-primary/5' 
+                ? 'border-primary bg-primary' 
                 : 'border-muted-foreground/25 hover:border-muted-foreground/50'
               }
-              ${uploadStatus === 'success' ? 'border-green-500 bg-green-50 dark:bg-green-950/20' : ''}
-              ${uploadStatus === 'error' ? 'border-red-500 bg-red-50 dark:bg-red-950/20' : ''}
+              ${uploadStatus === 'success' ? 'border-green-500 bg-green-50 dark:bg-green-950' : ''}
+              ${uploadStatus === 'error' ? 'border-red-500 bg-red-50 dark:bg-red-950' : ''}
             `}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -187,7 +187,7 @@ export function ImportDialog({ onFileUploaded }: ImportDialogProps) {
 
           {/* Selected File Info */}
           {selectedFile && uploadStatus !== 'success' && (
-            <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <div className="bg-muted rounded-lg p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FileType className="h-4 w-4 text-muted-foreground" />
@@ -215,7 +215,7 @@ export function ImportDialog({ onFileUploaded }: ImportDialogProps) {
 
           {/* Error Message */}
           {displayError && uploadStatus !== 'error' && (
-            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/20 p-3 rounded-lg">
+            <div className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 p-3 rounded-lg">
               {displayError}
             </div>
           )}
