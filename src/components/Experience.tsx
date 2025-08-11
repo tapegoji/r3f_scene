@@ -1,6 +1,16 @@
-import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, Grid, useKeyboardControls } from '@react-three/drei'
+import { OrbitControls, 
+         GizmoHelper, 
+         GizmoViewport, 
+         OrthographicCamera, 
+         PerspectiveCamera, 
+         Grid, 
+         useKeyboardControls } from '@react-three/drei'
 import { ThreeEvent } from '@react-three/fiber'
-import { useEffect, useRef, useState, useMemo, Suspense } from 'react'
+import { useEffect, 
+         useRef, 
+         useState, 
+         useMemo, 
+         Suspense } from 'react'
 import * as THREE from 'three'
 import Model from './Model'
 import { useCanvas } from '@/contexts/CanvasContext'
@@ -366,7 +376,7 @@ const Experience = () => {
             </Suspense>
 
             <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-                <GizmoViewport />
+                <GizmoViewport />   
             </GizmoHelper>
         </>
     )

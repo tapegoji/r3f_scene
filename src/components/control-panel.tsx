@@ -75,7 +75,7 @@ export function ControlPanel({
   y = 16,
   width = 300,
   height,
-  heightOffset = 100
+  heightOffset = 500
 }: ControlPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
