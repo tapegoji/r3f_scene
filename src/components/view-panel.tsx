@@ -26,6 +26,9 @@ interface ViewPanelProps {
   isChangePivot: boolean
   setIsTransform: React.Dispatch<React.SetStateAction<boolean>>
   setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
+  setShowGrid: React.Dispatch<React.SetStateAction<boolean>>
+  setShowWireframe: React.Dispatch<React.SetStateAction<boolean>>
+  fitToScreen: (() => void) | null
 }
 
 export function ViewPanel({
@@ -38,7 +41,10 @@ export function ViewPanel({
   isTransform,
   isChangePivot,
   setIsTransform,
-  setIsChangePivot
+  setIsChangePivot,
+  setShowGrid,
+  setShowWireframe,
+  fitToScreen
 }: ViewPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
@@ -63,6 +69,12 @@ export function ViewPanel({
       case 'reset':
         setCameraPosition([3, 3, 3])
         break
+      case 'fit':
+        // Fit camera to scene bounds
+        if (fitToScreen) {
+          fitToScreen()
+        }
+        break
       case 'toggle':
         if (action.feature === 'perspective') {
           setUseOrtho((prev) => !prev)
@@ -70,6 +82,10 @@ export function ViewPanel({
           setIsTransform((prev) => !prev)
         } else if (action.feature === 'axes0') {
           setIsChangePivot((prev) => !prev)
+        } else if (action.feature === 'grid') {
+          setShowGrid((prev) => !prev)
+        } else if (action.feature === 'wireframe') {
+          setShowWireframe((prev) => !prev)
         }
         break
     }

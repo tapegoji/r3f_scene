@@ -16,6 +16,9 @@ export function SimpleCanvas(): React.ReactElement {
   const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
   const [isTransform, setIsTransform] = useState<boolean>(false)
   const [isChangePivot, setIsChangePivot] = useState<boolean>(false)
+  const [showGrid, setShowGrid] = useState<boolean>(false)
+  const [showWireframe, setShowWireframe] = useState<boolean>(false)
+  const [fitToScreen, setFitToScreen] = useState<(() => void) | null>(null)
 
   // Keyboard controls for shortcut key
   const map = useMemo(
@@ -36,9 +39,9 @@ export function SimpleCanvas(): React.ReactElement {
     <KeyboardControls map={map}>
       <div className="w-full h-full">
         <Canvas>
-          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} />
+          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} showGrid={showGrid} showWireframe={showWireframe} setFitToScreen={setFitToScreen} />
         </Canvas>
-        <ViewPanel setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} />
+        <ViewPanel setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} setShowGrid={setShowGrid} setShowWireframe={setShowWireframe} fitToScreen={fitToScreen} />
         {/* <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} /> */}
         {/* <ControlPanel /> */}
         <ThemeToggle />

@@ -1,4 +1,4 @@
-import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, PivotControls, Edges } from '@react-three/drei'
+import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, PivotControls, Edges, Grid } from '@react-three/drei'
 import { ThreeEvent } from '@react-three/fiber'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import * as THREE from 'three'
@@ -9,6 +9,9 @@ interface ExperienceProps {
     isTransform: boolean
     isChangePivot: boolean
     setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
+    showGrid: boolean
+    showWireframe: boolean
+    setFitToScreen: React.Dispatch<React.SetStateAction<(() => void) | null>>
 }
 
 type PivotAnchor = { name: string, position: [number, number, number], rotation: [number, number, number] }
@@ -152,9 +155,10 @@ export const pivotData: PivotAnchor[] = [
 ]
  
 
-const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setIsChangePivot }: ExperienceProps) => {
+const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setIsChangePivot, showGrid, showWireframe, setFitToScreen }: ExperienceProps) => {
     const orthoRef = useRef<THREE.OrthographicCamera>(null)
     const perspectiveRef = useRef<THREE.PerspectiveCamera>(null)
+    const orbitControlsRef = useRef<any>(null)
 
     const meshRef = useRef<THREE.Mesh>(null)
 
@@ -165,6 +169,57 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
           perspectiveRef.current?.lookAt(0, 0, 0)
         }
     }, [useOrtho, cameraPosition])
+
+    // Set up fit-to-screen functionality
+    useEffect(() => {
+        const fitToScreenFunc = () => {
+            if (!meshRef.current || !orbitControlsRef.current) return
+
+            // Calculate bounding box of all objects in scene
+            const box = new THREE.Box3()
+            
+            // Add the mesh to the bounding box
+            box.expandByObject(meshRef.current)
+            
+            // Get the center and size of the bounding box
+            const center = box.getCenter(new THREE.Vector3())
+            const size = box.getSize(new THREE.Vector3())
+            
+            // Calculate the distance needed to fit the object
+            const maxDim = Math.max(size.x, size.y, size.z)
+            const fov = useOrtho ? 1 : (perspectiveRef.current?.fov || 50) * (Math.PI / 180)
+            let cameraZ = useOrtho ? maxDim * 2 : Math.abs(maxDim / (2 * Math.tan(fov / 2)))
+            
+            // Add some padding
+            cameraZ *= 3
+            
+            // Position camera at a good angle to see the object
+            const idealPosition = new THREE.Vector3(
+                center.x + cameraZ * 0.5,
+                center.y + cameraZ * 0.5, 
+                center.z + cameraZ * 0.5
+            )
+            
+            // Update OrbitControls target and camera position smoothly
+            if (orbitControlsRef.current) {
+                orbitControlsRef.current.target.copy(center)
+                
+                if (useOrtho && orthoRef.current) {
+                    orthoRef.current.position.copy(idealPosition)
+                    orthoRef.current.lookAt(center)
+                    orthoRef.current.updateProjectionMatrix()
+                } else if (!useOrtho && perspectiveRef.current) {
+                    perspectiveRef.current.position.copy(idealPosition)
+                    perspectiveRef.current.lookAt(center)
+                    perspectiveRef.current.updateProjectionMatrix()
+                }
+                
+                orbitControlsRef.current.update()
+            }
+        }
+
+        setFitToScreen(() => fitToScreenFunc)
+    }, [meshRef, orbitControlsRef, useOrtho, setFitToScreen])
 
     const [isSelected, setIsSelected] = useState<boolean>(false)
     const [pivotDataPreviousIndex, setPivotDataPreviousIndex] = useState<number>(0)
@@ -276,6 +331,8 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
 
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
+            
+            {showGrid && <Grid infiniteGrid />}
 
             <PivotControls
                 anchor={pivotData[pivotDataIndex].position}
@@ -293,12 +350,12 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
                     onClick={() => setIsSelected(true)}
                 >
                     <boxGeometry args={[1, 1, 1]} />
-                    <meshStandardMaterial color={isSelected ? "#34cdff" : "orange"} />
+                    <meshStandardMaterial color={isSelected ? "#34cdff" : "orange"} wireframe={showWireframe} />
                     <Edges linewidth={4} color="white" visible={isSelected} />
                 </mesh>
             </PivotControls>
 
-            <OrbitControls enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
+            <OrbitControls ref={orbitControlsRef} enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
             <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
                 <GizmoViewport />
             </GizmoHelper>
