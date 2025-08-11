@@ -18,8 +18,8 @@ interface ViewPanelProps {
 
 export function ViewPanel({
   x,
-  y = 300,
-  width = 100,
+  y = 350,
+  width = 60,
   height = 400
 }: ViewPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
@@ -85,12 +85,14 @@ export function ViewPanel({
             <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
           </button>
         </div>
-        <div className="p-4 h-[calc(100%-2rem)] overflow-auto">
-          {viewItems.map((item) => (
-            <i key={item.id} className="h-4 w-4 text-muted-foreground">
-              <img src={item.icon} alt={item.tooltip} />
-            </i>
-          ))}
+        <div className="p-0 h-[calc(100%-2rem)] overflow-auto">
+          <div className="grid grid-cols-2 gap-1">
+            {viewItems.map((item) => (
+              <div key={item.id} className="flex items-center justify-center p-1 hover:bg-muted/30 rounded transition-colors cursor-pointer">
+                <img src={item.icon} alt={item.tooltip} className="h-6 w-6" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Rnd>
