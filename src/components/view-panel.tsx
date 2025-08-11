@@ -85,14 +85,12 @@ export function ViewPanel({
             <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
           </button>
         </div>
-        <div className="p-0 h-[calc(100%-2rem)] overflow-auto">
-          <div className="grid grid-cols-2 gap-1">
-            {viewItems.map((item) => (
-              <div key={item.id} className="flex items-center justify-center p-1 hover:bg-muted/30 rounded transition-colors cursor-pointer">
-                <img src={item.icon} alt={item.tooltip} className="h-6 w-6" />
-              </div>
-            ))}
-          </div>
+        <div className="p-0 h-[calc(100%-2rem)] overflow-auto grid grid-cols-2 gap-1">
+          {viewItems.map((item) => (
+            <div key={item.id} className="flex items-center justify-center p-1 hover:bg-muted/30 rounded transition-colors cursor-pointer">
+              <img src={item.icon} alt={item.tooltip} className="h-6 w-6" />
+            </div>
+          ))}
         </div>
       </div>
     </Rnd>
