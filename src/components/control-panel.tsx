@@ -9,7 +9,8 @@ import { PanelLeftClose,
          Grid3X3,
          Play,
          BarChart3,
-         Menu } from 'lucide-react'
+         Menu,
+         Grip } from 'lucide-react'
 
 import {
   Collapsible,
@@ -111,7 +112,10 @@ export function ControlPanel({
     >
       <div className="h-full w-full bg-card/50 border rounded-lg shadow-lg backdrop-blur-sm">
         <div className="h-8 bg-muted/30 rounded-t-lg border-b px-3 flex items-center justify-between">
-          <span className="drag-handle cursor-move text-sm font-medium text-muted-foreground flex-1">Control Panel</span>
+          <span className="text-sm font-medium text-muted-foreground">Control Panel</span>
+          <div className="drag-handle cursor-move px-3 py-1 hover:bg-muted/50 rounded transition-colors flex items-center justify-center">
+            <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
+          </div>
           <button 
             onClick={() => setIsVisible(false)}
             className="p-1 hover:bg-muted/50 rounded transition-colors"
