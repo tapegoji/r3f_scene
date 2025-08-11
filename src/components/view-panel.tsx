@@ -96,7 +96,7 @@ export function ViewPanel({
     return (
       <button 
         onClick={() => setIsVisible(true)}
-        className="fixed top-4 right-4 p-2 bg-card border rounded-lg shadow-lg hover:bg-muted/50 transition-colors z-50"
+        className="fixed top-16 right-4 p-2 bg-card border rounded-lg shadow-lg hover:bg-muted/50 transition-colors z-50"
       >
         <Menu className="h-4 w-4 text-muted-foreground" />
       </button>

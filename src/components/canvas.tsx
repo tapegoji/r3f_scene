@@ -2,7 +2,6 @@
 
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
-import { NavigationToolbar } from './navigation-toolbar'
 import { ThemeToggle } from './theme-toggle'
 import { ControlPanel } from './control-panel'
 import { ViewPanel } from './view-panel'
