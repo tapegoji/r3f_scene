@@ -5,7 +5,8 @@ import { Rnd } from 'react-rnd'
 import { useTheme } from 'next-themes'
 
 import { PanelLeftClose,
-         Menu } from 'lucide-react'
+         Menu,
+         Grip } from 'lucide-react'
 
 
 interface ViewPanelProps {
@@ -73,13 +74,16 @@ export function ViewPanel({
     >
       <div className="h-full w-full bg-card/50 border rounded-lg shadow-lg backdrop-blur-sm">
         <div className="h-8 bg-muted/30 rounded-t-lg border-b px-3 flex items-center justify-between">
+          <span className="text-sm font-medium text-muted-foreground"></span>
+          <div className="drag-handle cursor-move px-3 py-1 hover:bg-muted/50 rounded transition-colors flex items-center justify-center">
+            <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
+          </div>
           <button 
             onClick={() => setIsVisible(false)}
             className="p-1 hover:bg-muted/50 rounded transition-colors"
           >
             <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
           </button>
-          <span className="drag-handle cursor-move text-sm font-medium text-muted-foreground flex-1 text-center">View Panel</span>
         </div>
         <div className="p-4 h-[calc(100%-2rem)] overflow-auto">
           {viewItems.map((item) => (
