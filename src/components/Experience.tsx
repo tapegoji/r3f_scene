@@ -1,18 +1,9 @@
 import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, PivotControls, Edges, Grid } from '@react-three/drei'
 import { ThreeEvent } from '@react-three/fiber'
-import { useEffect, useRef, useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo, Suspense } from 'react'
 import * as THREE from 'three'
-
-interface ExperienceProps {
-    useOrtho: boolean
-    cameraPosition: [number, number, number]
-    isTransform: boolean
-    isChangePivot: boolean
-    setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
-    showGrid: boolean
-    showWireframe: boolean
-    setFitToScreen: React.Dispatch<React.SetStateAction<(() => void) | null>>
-}
+import Model from './Model'
+import { useCanvas } from '@/contexts/CanvasContext'
 
 type PivotAnchor = { name: string, position: [number, number, number], rotation: [number, number, number] }
 
@@ -153,9 +144,17 @@ export const pivotData: PivotAnchor[] = [
         "rotation": [0, Math.PI * 0, 0]
     },
 ]
- 
 
-const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setIsChangePivot, showGrid, showWireframe, setFitToScreen }: ExperienceProps) => {
+const Experience = () => {
+    const { 
+        useOrtho, 
+        cameraPosition, 
+        isChangePivot, 
+        setIsChangePivot, 
+        showGrid, 
+        setFitToScreen 
+    } = useCanvas()
+    
     const orthoRef = useRef<THREE.OrthographicCamera>(null)
     const perspectiveRef = useRef<THREE.PerspectiveCamera>(null)
     const orbitControlsRef = useRef<any>(null)
@@ -221,43 +220,11 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
         setFitToScreen(() => fitToScreenFunc)
     }, [meshRef, orbitControlsRef, useOrtho, setFitToScreen])
 
-    const [isSelected, setIsSelected] = useState<boolean>(false)
     const [pivotDataPreviousIndex, setPivotDataPreviousIndex] = useState<number>(0)
     const [pivotDataIndex, setPivotDataIndex] = useState<number>(0)
 
     const raycaster = useMemo(() => new THREE.Raycaster(), [])
     const mouse = useMemo(() => new THREE.Vector2(), [])
-
-    useEffect(() => {
-        const handleWindowClick = (event: MouseEvent) => {
-            if (!meshRef.current) return
-
-            const canvas = document.querySelector('canvas')
-            if (event.target !== canvas) return
-      
-            // Calculate mouse normalized coords for raycaster
-            const mouseX = (event.clientX / window.innerWidth) * 2 - 1
-            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1
-            const mouseVec = new THREE.Vector2(mouseX, mouseY)
-        
-            // Use the currently active camera (orthographic or perspective)
-            const camera = useOrtho ? orthoRef.current : perspectiveRef.current
-            if (!camera) return
-        
-            raycaster.setFromCamera(mouseVec, camera)
-            const intersects = raycaster.intersectObject(meshRef.current)
-        
-            if (intersects.length === 0) {
-                // Clicked outside mesh
-                setIsSelected(false)
-            }
-        }
-      
-        window.addEventListener('click', handleWindowClick)
-        return () => {
-          window.removeEventListener('click', handleWindowClick)
-        }
-    }, [useOrtho, raycaster])
 
     useEffect(() => {
         const handleClick = () => {
@@ -329,33 +296,19 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
                 <PerspectiveCamera ref={perspectiveRef} makeDefault position={cameraPosition} fov={50} near={0.1} far={1000} />
             )}
 
+            <OrbitControls ref={orbitControlsRef} enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
+
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             
             {showGrid && <Grid infiniteGrid />}
 
-            <PivotControls
-                anchor={pivotData[pivotDataIndex].position}
-                rotation={pivotData[pivotDataIndex].rotation}
-                depthTest={false}
-                disableAxes={!isTransform}
-                disableSliders={!isTransform}
-                disableRotations={!isTransform}
-                disableScaling
-                scale={0.5}
-            >
-                <mesh
-                    ref={meshRef}
-                    onPointerMove={handlePointerMove}
-                    onClick={() => setIsSelected(true)}
-                >
-                    <boxGeometry args={[1, 1, 1]} />
-                    <meshStandardMaterial color={isSelected ? "#4A90E2" : "orange"} wireframe={showWireframe} transparent opacity={isSelected ? 0.5 : 1} />
-                    <Edges linewidth={4} color="white" visible={isSelected} />
-                </mesh>
-            </PivotControls>
+            <Suspense fallback={null}>
+                <Model name="Curly" position={[-0.5, -0.3, -0.5]} rotation={[2, 0, -0]} scale={0.1}/>
+                <Model name="Headphones" position={[0.5, 0.3, 1.3]} rotation={[1, 0, -1]} scale={0.1}/>
+                <Model name="Notebook" position={[-3, 0, -1]} rotation={[2, 0, 1]} scale={0.1}/>
+            </Suspense>
 
-            <OrbitControls ref={orbitControlsRef} enableDamping={false} minDistance={1} maxDistance={10} makeDefault />
             <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
                 <GizmoViewport />
             </GizmoHelper>

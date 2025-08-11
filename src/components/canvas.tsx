@@ -6,20 +6,13 @@ import { KeyboardControls } from '@react-three/drei'
 import { ThemeToggle } from './theme-toggle'
 import { ControlPanel } from './control-panel'
 import { ViewPanel } from './view-panel'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import controls from '@/constants/controls'
+import { CanvasProvider } from '@/contexts/CanvasContext'
 
 import Experience from './Experience'
 
 export function SimpleCanvas(): React.ReactElement {
-  const [useOrtho, setUseOrtho] = useState<boolean>(false)
-  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
-  const [isTransform, setIsTransform] = useState<boolean>(false)
-  const [isChangePivot, setIsChangePivot] = useState<boolean>(false)
-  const [showGrid, setShowGrid] = useState<boolean>(false)
-  const [showWireframe, setShowWireframe] = useState<boolean>(false)
-  const [fitToScreen, setFitToScreen] = useState<(() => void) | null>(null)
-
   // Keyboard controls for shortcut key
   const map = useMemo(
     () => [
@@ -36,15 +29,17 @@ export function SimpleCanvas(): React.ReactElement {
   )
 
   return (
-    <KeyboardControls map={map}>
-      <div className="w-full h-full">
-        <Canvas>
-          <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} showGrid={showGrid} showWireframe={showWireframe} setFitToScreen={setFitToScreen} />
-        </Canvas>
-        <ViewPanel setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} setShowGrid={setShowGrid} setShowWireframe={setShowWireframe} fitToScreen={fitToScreen} />
-        <ThemeToggle />
-        <ControlPanel />
-      </div>
-    </KeyboardControls>
+    <CanvasProvider>
+      <KeyboardControls map={map}>
+        <div className="w-full h-full">
+          <Canvas>
+            <Experience />
+          </Canvas>
+          <ViewPanel />
+          <ThemeToggle />
+          <ControlPanel />
+        </div>
+      </KeyboardControls>
+    </CanvasProvider>
   )
 }
