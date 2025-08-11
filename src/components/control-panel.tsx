@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 
 import { PanelLeftClose,
@@ -66,15 +66,29 @@ interface ControlPanelProps {
   y?: number
   width?: number
   height?: number
+  heightOffset?: number
 }
 
 export function ControlPanel({
   x = 16,
   y = 16,
   width = 300,
-  height = 600
+  height,
+  heightOffset = 100
 }: ControlPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800)
+  
+  const calculatedHeight = height ?? windowHeight - heightOffset
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   if (!isVisible) {
     return (
@@ -88,7 +102,7 @@ export function ControlPanel({
   }
   return (
     <Rnd
-      default={{ x, y, width, height }}
+      default={{ x, y, width, height: calculatedHeight }}
       enableResizing={{
         bottomRight: true
       }}
