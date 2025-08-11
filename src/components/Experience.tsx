@@ -1,9 +1,10 @@
-import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, PivotControls, Edges, Grid } from '@react-three/drei'
+import { OrbitControls, GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera, Grid, useKeyboardControls } from '@react-three/drei'
 import { ThreeEvent } from '@react-three/fiber'
 import { useEffect, useRef, useState, useMemo, Suspense } from 'react'
 import * as THREE from 'three'
 import Model from './Model'
 import { useCanvas } from '@/contexts/CanvasContext'
+import controls from '@/constants/controls'
 
 type PivotAnchor = { name: string, position: [number, number, number], rotation: [number, number, number] }
 
@@ -152,7 +153,10 @@ const Experience = () => {
         isChangePivot, 
         setIsChangePivot, 
         showGrid, 
-        setFitToScreen 
+        setFitToScreen,
+        setCameraPosition,
+        setUseOrtho,
+        setIsTransform
     } = useCanvas()
     
     const orthoRef = useRef<THREE.OrthographicCamera>(null)
@@ -160,6 +164,58 @@ const Experience = () => {
     const orbitControlsRef = useRef<any>(null)
 
     const meshRef = useRef<THREE.Mesh>(null)
+
+    // Keyboard controls 
+    const frontShortcutKey = useKeyboardControls((state) => state[controls.FRONT])
+    const backShortcutKey = useKeyboardControls((state) => state[controls.BACK])
+    const leftShortcutKey = useKeyboardControls((state) => state[controls.LEFT])
+    const rightShortcutKey = useKeyboardControls((state) => state[controls.RIGHT])
+    const topShortcutKey = useKeyboardControls((state) => state[controls.TOP])
+    const bottomShortcutKey = useKeyboardControls((state) => state[controls.BOTTOM])
+    const orthoShortcutKey = useKeyboardControls((state) => state[controls.ORTHO])
+    const transformShortcutKey = useKeyboardControls((state) => state[controls.TRANSFORM])
+
+    // Handle keyboard shortcuts
+    useEffect(() => {
+        if (frontShortcutKey) {
+            setCameraPosition([0, 0, 5])
+            setUseOrtho(false)
+        } else if (backShortcutKey) {
+            setCameraPosition([0, 0, -5])
+            setUseOrtho(false)
+        } else if (leftShortcutKey) {
+            setCameraPosition([-5, 0, 0])
+            setUseOrtho(false)
+        } else if (rightShortcutKey) {
+            setCameraPosition([5, 0, 0])
+            setUseOrtho(false)
+        } else if (topShortcutKey) {
+            setCameraPosition([0, 5, 0])
+            setUseOrtho(false)
+        } else if (bottomShortcutKey) {
+            setCameraPosition([0, -5, 0])
+            setUseOrtho(false)
+        } else if (orthoShortcutKey) {
+            setCameraPosition([3, 3, 3])
+            setUseOrtho((prev) => !prev)
+        }
+
+        if (transformShortcutKey) {
+            setIsTransform((prev) => !prev)
+        }
+    }, [
+        frontShortcutKey,
+        backShortcutKey,
+        leftShortcutKey,
+        rightShortcutKey,
+        topShortcutKey,
+        bottomShortcutKey,
+        orthoShortcutKey,
+        transformShortcutKey,
+        setCameraPosition,
+        setUseOrtho,
+        setIsTransform
+    ])
 
     useEffect(() => {
         if (useOrtho) {
