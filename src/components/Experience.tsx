@@ -350,7 +350,7 @@ const Experience = ({ useOrtho, cameraPosition, isTransform, isChangePivot, setI
                     onClick={() => setIsSelected(true)}
                 >
                     <boxGeometry args={[1, 1, 1]} />
-                    <meshStandardMaterial color={isSelected ? "#34cdff" : "orange"} wireframe={showWireframe} />
+                    <meshStandardMaterial color={isSelected ? "#4A90E2" : "orange"} wireframe={showWireframe} transparent opacity={isSelected ? 0.5 : 1} />
                     <Edges linewidth={4} color="white" visible={isSelected} />
                 </mesh>
             </PivotControls>

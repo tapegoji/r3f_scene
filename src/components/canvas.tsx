@@ -42,8 +42,6 @@ export function SimpleCanvas(): React.ReactElement {
           <Experience useOrtho={useOrtho} cameraPosition={cameraPosition} isTransform={isTransform} isChangePivot={isChangePivot} setIsChangePivot={setIsChangePivot} showGrid={showGrid} showWireframe={showWireframe} setFitToScreen={setFitToScreen} />
         </Canvas>
         <ViewPanel setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} setShowGrid={setShowGrid} setShowWireframe={setShowWireframe} fitToScreen={fitToScreen} />
-        {/* <NavigationToolbar setCameraPosition={setCameraPosition} setUseOrtho={setUseOrtho} isTransform={isTransform} isChangePivot={isChangePivot} setIsTransform={setIsTransform} setIsChangePivot={setIsChangePivot} /> */}
-        {/* <ControlPanel /> */}
         <ThemeToggle />
         <ControlPanel />
       </div>
