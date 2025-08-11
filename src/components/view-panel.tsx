@@ -8,19 +8,37 @@ import { PanelLeftClose,
          Menu,
          Grip } from 'lucide-react'
 
+type ButtonAction = 
+  | { type: 'position', position: [number, number, number] }
+  | { type: 'fit' }
+  | { type: 'reset' }
+  | { type: 'toggle', feature: string }
+
 
 interface ViewPanelProps {
   x?: number
   y?: number
   width?: number
   height?: number
+  setCameraPosition: (pos: [number, number, number]) => void
+  setUseOrtho: React.Dispatch<React.SetStateAction<boolean>>
+  isTransform: boolean
+  isChangePivot: boolean
+  setIsTransform: React.Dispatch<React.SetStateAction<boolean>>
+  setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function ViewPanel({
   x,
-  y = 350,
-  width = 70,
-  height = 300
+  y = 60,
+  width = 80,
+  height = 300,
+  setCameraPosition,
+  setUseOrtho,
+  isTransform,
+  isChangePivot,
+  setIsTransform,
+  setIsChangePivot
 }: ViewPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
@@ -37,7 +55,28 @@ export function ViewPanel({
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const viewItems = [
+  const handleAction = (action: ButtonAction) => {
+    switch (action.type) {
+      case 'position':
+        setCameraPosition(action.position)
+        break
+      case 'reset':
+        setCameraPosition([3, 3, 3])
+        break
+      case 'toggle':
+        if (action.feature === 'perspective') {
+          setUseOrtho((prev) => !prev)
+        } else if (action.feature === 'axes') {
+          setIsTransform((prev) => !prev)
+        } else if (action.feature === 'axes0') {
+          setIsChangePivot((prev) => !prev)
+        }
+        break
+    }
+    return
+  }
+
+  const viewItems: Array<{ id: string, icon: string, action: ButtonAction, tooltip: string }> = [
     { id: 'orthographic', icon: `/icons/${theme}/iso.svg`, action: { type: 'position', position: [3, 3, 3] }, tooltip: 'Orthographic View' },
     { id: 'front', icon: `/icons/${theme}/front.svg`, action: { type: 'position', position: [0, 0, 5] }, tooltip: 'Front View' },
     { id: 'rear', icon: `/icons/${theme}/rear.svg`, action: { type: 'position', position: [0, 0, -5] }, tooltip: 'Rear View' },
@@ -84,11 +123,16 @@ export function ViewPanel({
             <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
           </div>
         </div>
-        <div className="p-0 h-[calc(100%-2rem)] overflow-auto grid gap-1" style={{ gridTemplateColumns: 'repeat(2, minmax(32px, 1fr))' }}>
+        <div className="p-1 h-[calc(100%-2rem)] overflow-auto grid gap-1" style={{ gridTemplateColumns: 'repeat(2, minmax(32px, 1fr))' }}>
           {viewItems.map((item) => (
-            <div key={item.id} className="flex items-center justify-center p-0.5 hover:bg-muted/30 rounded transition-colors cursor-pointer min-w-8 min-h-8">
-              <img src={item.icon} alt={item.tooltip} className="h-6 w-6 flex-shrink-0" />
-            </div>
+            <button
+              key={item.id}
+              className="w-7 h-7 p-0 hover:bg-accent rounded-lg flex items-center justify-center transition-colors"
+              onClick={() => handleAction(item.action)}
+              title={item.tooltip}
+            >
+              <img src={item.icon} alt={item.tooltip} className="w-[22px] h-[22px]" />
+            </button>
           ))}
         </div>
       </div>
