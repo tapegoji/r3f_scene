@@ -1,17 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import { useTheme } from 'next-themes'
 
 import { PanelLeftClose,
          Menu } from 'lucide-react'
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 
 
 interface ViewPanelProps {
@@ -22,13 +16,25 @@ interface ViewPanelProps {
 }
 
 export function ViewPanel({
-  x = 316,
-  y = 16,
+  x,
+  y = 300,
   width = 100,
   height = 400
 }: ViewPanelProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   const { theme } = useTheme()
+
+  const dynamicX = x ?? (windowWidth - width - 16)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const viewItems = [
     { id: 'orthographic', icon: `/icons/${theme}/iso.svg`, action: { type: 'position', position: [3, 3, 3] }, tooltip: 'Orthographic View' },
@@ -58,7 +64,7 @@ export function ViewPanel({
   }
   return (
     <Rnd
-      default={{ x, y, width, height }}
+      default={{ x: dynamicX, y, width, height }}
       enableResizing={{
         bottomRight: true
       }}
@@ -67,13 +73,13 @@ export function ViewPanel({
     >
       <div className="h-full w-full bg-card/50 border rounded-lg shadow-lg backdrop-blur-sm">
         <div className="h-8 bg-muted/30 rounded-t-lg border-b px-3 flex items-center justify-between">
-          <span className="drag-handle cursor-move text-sm font-medium text-muted-foreground flex-1">View Panel</span>
           <button 
             onClick={() => setIsVisible(false)}
             className="p-1 hover:bg-muted/50 rounded transition-colors"
           >
             <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
           </button>
+          <span className="drag-handle cursor-move text-sm font-medium text-muted-foreground flex-1 text-center">View Panel</span>
         </div>
         <div className="p-4 h-[calc(100%-2rem)] overflow-auto">
           {viewItems.map((item) => (
