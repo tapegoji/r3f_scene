@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
 import { ThemeToggle } from './theme-toggle'
@@ -10,7 +11,7 @@ import controls from '@/constants/controls'
 
 import Experience from './Experience'
 
-export function SimpleCanvas(): JSX.Element {
+export function SimpleCanvas(): React.ReactElement {
   const [useOrtho, setUseOrtho] = useState<boolean>(false)
   const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([3, 3, 3])
   const [isTransform, setIsTransform] = useState<boolean>(false)
