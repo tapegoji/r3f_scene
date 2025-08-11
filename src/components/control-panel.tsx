@@ -17,6 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { ImportDialog } from "@/components/import-dialog"
 
 const ControlPanelSections = [
   {
@@ -82,6 +83,11 @@ export function ControlPanel({
   
   const calculatedHeight = height ?? windowHeight - heightOffset
 
+  const handleFileUploaded = (filename: string) => {
+    console.log('File uploaded successfully:', filename)
+    // TODO: Add logic to load the uploaded CAD file into the 3D scene
+  }
+
   useEffect(() => {
     const handleResize = () => {
       setWindowHeight(window.innerHeight)
@@ -137,13 +143,20 @@ export function ControlPanel({
             </CollapsibleTrigger>
             <CollapsibleContent>
               {section.items.map((item) => (
-                <a
-                  key={item.title}
-                  href={item.url}
-                  className="w-full justify-start px-2 py-1.5 h-auto text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors block"
-                >
-                  {item.title}
-                </a>
+                item.title === "Import CAD" ? (
+                  <ImportDialog 
+                    key={item.title}
+                    onFileUploaded={handleFileUploaded}
+                  />
+                ) : (
+                  <a
+                    key={item.title}
+                    href={item.url}
+                    className="w-full justify-start px-2 py-1.5 h-auto text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors block"
+                  >
+                    {item.title}
+                  </a>
+                )
               ))}
             </CollapsibleContent>
           </Collapsible>
