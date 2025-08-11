@@ -73,17 +73,16 @@ export function ViewPanel({
       style={{ zIndex: 100 }}
     >
       <div className="h-full w-full bg-card/50 border rounded-lg shadow-lg backdrop-blur-sm">
-        <div className="h-8 bg-muted/30 rounded-t-lg border-b px-3 flex items-center justify-between">
-          <span className="text-sm font-medium text-muted-foreground"></span>
-          <div className="drag-handle cursor-move px-3 py-1 hover:bg-muted/50 rounded transition-colors flex items-center justify-center">
-            <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
-          </div>
+        <div className="h-8 bg-muted/30 rounded-t-lg border-b flex items-center">
           <button 
             onClick={() => setIsVisible(false)}
-            className="p-1 hover:bg-muted/50 rounded transition-colors"
+            className="p-2 hover:bg-muted/50 rounded transition-colors"
           >
-            <PanelLeftClose className="h-3 w-3 text-muted-foreground/60" />
+            <PanelLeftClose className="h-4 w-4 text-muted-foreground/60" />
           </button>
+          <div className="drag-handle cursor-move px-1 py-1 hover:bg-muted/50 rounded transition-colors flex items-center justify-center">
+            <Grip className="h-4 w-4 text-muted-foreground/60 hover:text-muted-foreground" />
+          </div>
         </div>
         <div className="p-0 h-[calc(100%-2rem)] overflow-auto grid grid-cols-2 gap-1">
           {viewItems.map((item) => (
