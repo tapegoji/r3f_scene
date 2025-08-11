@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import { useTheme } from 'next-themes'
+import { useCanvas } from '@/contexts/CanvasContext'
 
 import { PanelLeftClose,
          Menu,
@@ -20,32 +21,24 @@ interface ViewPanelProps {
   y?: number
   width?: number
   height?: number
-  setCameraPosition: (pos: [number, number, number]) => void
-  setUseOrtho: React.Dispatch<React.SetStateAction<boolean>>
-  isTransform: boolean
-  isChangePivot: boolean
-  setIsTransform: React.Dispatch<React.SetStateAction<boolean>>
-  setIsChangePivot: React.Dispatch<React.SetStateAction<boolean>>
-  setShowGrid: React.Dispatch<React.SetStateAction<boolean>>
-  setShowWireframe: React.Dispatch<React.SetStateAction<boolean>>
-  fitToScreen: (() => void) | null
 }
 
 export function ViewPanel({
   x,
   y = 60,
   width = 80,
-  height = 300,
-  setCameraPosition,
-  setUseOrtho,
-  isTransform,
-  isChangePivot,
-  setIsTransform,
-  setIsChangePivot,
-  setShowGrid,
-  setShowWireframe,
-  fitToScreen
+  height = 300
 }: ViewPanelProps) {
+  const { 
+    setCameraPosition,
+    setUseOrtho,
+    setIsTransform,
+    setIsChangePivot,
+    setShowGrid,
+    setShowWireframe,
+    fitToScreen
+  } = useCanvas()
+  
   const [isVisible, setIsVisible] = useState(true)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   const { theme } = useTheme()
